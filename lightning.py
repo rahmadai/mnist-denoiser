@@ -25,8 +25,10 @@ class LitMNIST(LightningModule):
 
     x = F.log_softmax(x, dim=1)
     return x
-   
-net = LitMNIST()
-x = torch.randn(1, 1, 28, 28)
-out = net(x)
-print(out)
+  
+  def training_step(self, batch, batch_idx):
+      x, y = batch
+      logits = self(x)
+      loss = F.nll_loss(logits, y)
+      return loss
+    
