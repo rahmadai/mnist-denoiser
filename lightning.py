@@ -39,6 +39,20 @@ class LitMNIST(pl.LightningModule):
       loss = F.nll_loss(logits, y)
       return loss
     
+  def validation_step(self, batch, batch_idx):
+      x, y = batch
+      logits = self(x)
+      loss = F.nll_loss(logits, y)
+      preds = torch.argmax(logits, dim=1)
+      acc = accuracy(preds, y)
+      self.log('val_loss', loss, prog_bar=True)
+      self.log('val_acc', acc, prog_bar=True)
+      return loss
+      
+  def configure_optimizers(self):
+      optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+      return optimizer
+  
     
 class MNISTDataModule(pl.LightningDataModule):
   def __init__(self, batch_size=64):
