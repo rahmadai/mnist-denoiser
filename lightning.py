@@ -11,7 +11,7 @@ AVAIL_GPUS = min(1, torch.cuda.device_count())
 BATCH_SIZE = 256 if AVAIL_GPUS else 64
 
 class LitMNIST(pl.LightningModule):
-  def __init__(self):
+  def __init__(self, hidden_size=64, learning_rate=2e-4):
     super().__init__()
 
     # mnist images are (1, 28, 28) (channels, width, height)
