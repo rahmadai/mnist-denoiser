@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader, random_split
 from torchvision.datasets import MNIST
 import os
 from torchvision import datasets, transforms
+from pytorch_lightning.metrics.functional import accuracy
 
 AVAIL_GPUS = min(1, torch.cuda.device_count())
 BATCH_SIZE = 256 if AVAIL_GPUS else 64
@@ -14,11 +15,13 @@ class LitMNIST(pl.LightningModule):
   def __init__(self, hidden_size=64, learning_rate=2e-4):
     super().__init__()
 
+    self.hidden_size = hidden_size
+    self.learning_rate = learning_rate
     # mnist images are (1, 28, 28) (channels, width, height)
     self.layer_1 = nn.Linear(28 * 28, 128)
     self.layer_2 = nn.Linear(128, 256)
     self.layer_3 = nn.Linear(256, 10)
-
+    
   def forward(self, x):
     batch_size, channels, width, height = x.size()
 
